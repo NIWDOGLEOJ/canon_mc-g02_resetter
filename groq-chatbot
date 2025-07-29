@@ -1,0 +1,258 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyN9QAPr42Pp4E3TcPyxTJKc",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/NIWDOGLEOJ/canon_mc-g02_resetter/blob/main/groq-chatbot\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install -q groq gradio"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "MwtL4aBhw_HJ",
+        "outputId": "e539769c-cb65-4d32-8f34-71c9a6631654"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\u001b[?25l   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m0.0/131.1 kB\u001b[0m \u001b[31m?\u001b[0m eta \u001b[36m-:--:--\u001b[0m\r\u001b[2K   \u001b[90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\u001b[0m \u001b[32m131.1/131.1 kB\u001b[0m \u001b[31m3.9 MB/s\u001b[0m eta \u001b[36m0:00:00\u001b[0m\n",
+            "\u001b[?25h"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "pip install groq"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4B2COVG6yXqD",
+        "outputId": "06bb1e07-b7b4-417c-ffd8-35f29b9f638a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Requirement already satisfied: groq in /usr/local/lib/python3.11/dist-packages (0.30.0)\n",
+            "Requirement already satisfied: anyio<5,>=3.5.0 in /usr/local/lib/python3.11/dist-packages (from groq) (4.9.0)\n",
+            "Requirement already satisfied: distro<2,>=1.7.0 in /usr/local/lib/python3.11/dist-packages (from groq) (1.9.0)\n",
+            "Requirement already satisfied: httpx<1,>=0.23.0 in /usr/local/lib/python3.11/dist-packages (from groq) (0.28.1)\n",
+            "Requirement already satisfied: pydantic<3,>=1.9.0 in /usr/local/lib/python3.11/dist-packages (from groq) (2.11.7)\n",
+            "Requirement already satisfied: sniffio in /usr/local/lib/python3.11/dist-packages (from groq) (1.3.1)\n",
+            "Requirement already satisfied: typing-extensions<5,>=4.10 in /usr/local/lib/python3.11/dist-packages (from groq) (4.14.1)\n",
+            "Requirement already satisfied: idna>=2.8 in /usr/local/lib/python3.11/dist-packages (from anyio<5,>=3.5.0->groq) (3.10)\n",
+            "Requirement already satisfied: certifi in /usr/local/lib/python3.11/dist-packages (from httpx<1,>=0.23.0->groq) (2025.7.14)\n",
+            "Requirement already satisfied: httpcore==1.* in /usr/local/lib/python3.11/dist-packages (from httpx<1,>=0.23.0->groq) (1.0.9)\n",
+            "Requirement already satisfied: h11>=0.16 in /usr/local/lib/python3.11/dist-packages (from httpcore==1.*->httpx<1,>=0.23.0->groq) (0.16.0)\n",
+            "Requirement already satisfied: annotated-types>=0.6.0 in /usr/local/lib/python3.11/dist-packages (from pydantic<3,>=1.9.0->groq) (0.7.0)\n",
+            "Requirement already satisfied: pydantic-core==2.33.2 in /usr/local/lib/python3.11/dist-packages (from pydantic<3,>=1.9.0->groq) (2.33.2)\n",
+            "Requirement already satisfied: typing-inspection>=0.4.0 in /usr/local/lib/python3.11/dist-packages (from pydantic<3,>=1.9.0->groq) (0.4.1)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from groq import Groq\n",
+        "from google.colab import userdata\n",
+        "\n",
+        "client = Groq(api_key=userdata.get('GROQ'))\n",
+        "\n",
+        "chat_completion = client.chat.completions.create(\n",
+        "    messages=[\n",
+        "        # Set an optional system message. This sets the behavior of the\n",
+        "        # assistant and can be used to provide specific instructions for\n",
+        "        # how it should behave throughout the conversation.\n",
+        "        {\n",
+        "            \"role\": \"system\",\n",
+        "            \"content\": \"You are a helpful assistant.\"\n",
+        "        },\n",
+        "        # Set a user message for the assistant to respond to.\n",
+        "        {\n",
+        "            \"role\": \"user\",\n",
+        "            \"content\": \"what languages do u know\",\n",
+        "        }\n",
+        "    ],\n",
+        "\n",
+        "    # The language model which will generate the completion.\n",
+        "    model=\"llama-3.3-70b-versatile\"\n",
+        ")\n",
+        "\n",
+        "# Print the completion returned by the LLM.\n",
+        "print(chat_completion.choices[0].message.content)"
+      ],
+      "metadata": {
+        "id": "ipUqdxUDyYgS",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "8f2edbd2-dca5-4628-ae7c-00e72879f2fb"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "I can understand and respond in multiple languages, including but not limited to:\n",
+            "\n",
+            "1. **English**: My primary language, which I can understand and respond to with a high level of proficiency.\n",
+            "2. **Spanish**: I can understand and respond in Spanish, although my proficiency may vary depending on the complexity of the text.\n",
+            "3. **French**: I have a good understanding of French and can respond in a basic to intermediate level.\n",
+            "4. **German**: I can understand and respond in German, although my proficiency may be limited to basic to intermediate level.\n",
+            "5. **Italian**: I have a basic understanding of Italian and can respond in a simple to intermediate level.\n",
+            "6. **Portuguese**: I can understand and respond in Portuguese, although my proficiency may vary depending on the dialect (European or Brazilian).\n",
+            "7. **Dutch**: I have a basic understanding of Dutch and can respond in a simple to intermediate level.\n",
+            "8. **Russian**: I can understand and respond in Russian, although my proficiency may be limited to basic to intermediate level.\n",
+            "9. **Chinese (Simplified and Traditional)**: I can understand and respond in Chinese, although my proficiency may be limited to basic to intermediate level.\n",
+            "10. **Japanese**: I have a basic understanding of Japanese and can respond in a simple to intermediate level.\n",
+            "11. **Korean**: I can understand and respond in Korean, although my proficiency may be limited to basic to intermediate level.\n",
+            "12. **Arabic**: I have a basic understanding of Arabic and can respond in a simple to intermediate level.\n",
+            "13. **Hebrew**: I can understand and respond in Hebrew, although my proficiency may be limited to basic to intermediate level.\n",
+            "14. **Hindi**: I have a basic understanding of Hindi and can respond in a simple to intermediate level.\n",
+            "\n",
+            "Please keep in mind that my language proficiency may vary depending on the complexity of the text, dialect, and regional differences. If you need assistance in a specific language, feel free to ask, and I'll do my best to help!\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import gradio as gr\n",
+        "from groq import Groq\n",
+        "from google.colab import userdata\n",
+        "import time\n",
+        "\n",
+        "client = Groq(api_key=userdata.get(\"GROQ\"))\n",
+        "\n",
+        "def chat_with_metrics(user_input):\n",
+        "    start_time = time.time()\n",
+        "\n",
+        "    response = client.chat.completions.create(\n",
+        "        model=\"llama3-70b-8192\",\n",
+        "        messages=[\n",
+        "            {\"role\": \"system\", \"content\": \"You are a helpful assistant.\"},\n",
+        "            {\"role\": \"user\", \"content\": user_input}\n",
+        "        ]\n",
+        "    )\n",
+        "\n",
+        "    end_time = time.time()\n",
+        "    total_time = end_time - start_time\n",
+        "\n",
+        "    content = response.choices[0].message.content\n",
+        "\n",
+        "    usage = response.usage\n",
+        "    prompt_tokens = usage.prompt_tokens\n",
+        "    completion_tokens = usage.completion_tokens\n",
+        "    total_tokens = usage.total_tokens\n",
+        "\n",
+        "    tokens_per_second = total_tokens / total_time if total_time > 0 else 0\n",
+        "\n",
+        "    stats = (\n",
+        "        f\"🕒 Inference time: {total_time:.2f} seconds\\n\"\n",
+        "        f\"🔢 Total tokens: {total_tokens} (Prompt: {prompt_tokens}, Completion: {completion_tokens})\\n\"\n",
+        "        f\"⚡ Tokens/sec: {tokens_per_second:.2f}\"\n",
+        "    )\n",
+        "\n",
+        "    return content, stats\n",
+        "\n",
+        "gr.Interface(\n",
+        "    fn=chat_with_metrics,\n",
+        "    inputs=\"text\",\n",
+        "    outputs=[\"text\", \"text\"],\n",
+        "    title=\"Groq LLaMA 3 Chat with Inference Stats\",\n",
+        "    description=\"Enter your message to chat with LLaMA 3 (70B) via Groq. Response time and token usage will be displayed.\"\n",
+        ").launch()\n"
+      ],
+      "metadata": {
+        "id": "jMrxPe4fzyO-",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 648
+        },
+        "outputId": "fb4de92d-b9f7-47df-b982-cbc158462814"
+      },
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "It looks like you are running Gradio on a hosted Jupyter notebook, which requires `share=True`. Automatically setting `share=True` (you can turn this off by setting `share=False` in `launch()` explicitly).\n",
+            "\n",
+            "Colab notebook detected. To show errors in colab notebook, set debug=True in launch()\n",
+            "* Running on public URL: https://1c4473ce324ea9a61b.gradio.live\n",
+            "\n",
+            "This share link expires in 1 week. For free permanent hosting and GPU upgrades, run `gradio deploy` from the terminal in the working directory to deploy to Hugging Face Spaces (https://huggingface.co/spaces)\n"
+          ]
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ],
+            "text/html": [
+              "<div><iframe src=\"https://1c4473ce324ea9a61b.gradio.live\" width=\"100%\" height=\"500\" allow=\"autoplay; camera; microphone; clipboard-read; clipboard-write;\" frameborder=\"0\" allowfullscreen></iframe></div>"
+            ]
+          },
+          "metadata": {}
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": []
+          },
+          "metadata": {},
+          "execution_count": 11
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "FL4FuJJJ0TqA"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
